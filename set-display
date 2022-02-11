@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [[ -n $(xrandr | rg 'HDMI1 connected') ]]; then
+    #autorandr dual-vert
+    #xrandr --output HDMI1 --primary --mode 1920x1080 --pos 0x0 --output LVDS1 --mode 1366x768 --pos 277x1080
+    xrandr --output HDMI1 --primary --mode 1920x1080 --output LVDS1 --off
+else
+	#autorandr laptop
+    xrandr --output LVDS1 --primary --auto --output HDMI1 --off
+fi
+
+nitrogen --restore

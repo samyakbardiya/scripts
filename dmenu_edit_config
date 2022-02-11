@@ -1,0 +1,67 @@
+#!/bin/bash
+# vim: expandtab:
+
+_usage="
+$(basename $0) is a dmenu script to open all configuration file of any packages mentioned below
+"
+[[ -n $1 ]] && echo "$_usage" &&  exit ;
+
+_dmenu="dmenu -l 10 -c -bw 3 -p config"
+_edit="$TERMINAL -e nvim -p"
+_config=$(tail -n +16 $0 | head -n -1 | shuf | $_dmenu | cut -d '|' -f2)
+
+[[ -n $_config ]] && eval "$_edit $_config"
+
+config_files="
+alacritty           | $CONFIG/alacritty/alacritty.yml
+alias               | $CONFIG/aliasrc
+darkreader          | $DATA/qutebrowser/greasemonkey/darkreader.js
+directories         | $CONFIG/directories
+dmenu_edit_config   | $BIN/dmenu_edit_config
+doas                | $CONFIG/doas.conf
+doom-emacs          | $CONFIG/doom/*
+dosbox              | $CONFIG/dosbox/dosbox.conf
+dunst               | $CONFIG/dunst/dunstrc
+gentleman           | $BIN/gentleman
+greasemonkey        | $DATA/qutebrowser/greasemonkey/
+grub                | /etc/default/grub /etc/grub.d/
+i3                  | $CONFIG/i3/config
+i3blocks            | $CONFIG/i3blocks/{config,*}
+lf                  | $CONFIG/lf/lfrc
+lofi                | $BIN/lofi
+mime                | $CONFIG/mimeapps.list
+mpd                 | $CONFIG/mpd/mpd.conf
+mpv                 | $CONFIG/mpv/{mpv,input}.conf
+ncmpcpp             | $CONFIG/ncmpcpp/{config,bindings}
+neofetch            | $CONFIG/neofetch/config.conf
+neovim              | $CONFIG/nvim/
+pacman              | $CONFIG/etc/pacman.conf
+paru                | $CONFIG/paru/paru.conf
+picom               | $CONFIG/picom/picom.conf
+qtile               | $CONFIG/qtile/{config.py,autostart.sh}
+qutebrowser         | $CONFIG/qutebrowser/
+redshift            | $CONFIG/redshift/redshift.conf
+rofi                | $CONFIG/rofi/config.rasi
+simpleClock         | $CONFIG/startpages/simpleClock
+set-display         | $BIN/set-display
+set-keymap          | $BIN/set-keymap
+sort_download_dir   | $BIN/sort_download_dir
+statusbar/          | $BIN/statusbar
+sxhkd               | $CONFIG/sxhkd/sxhkdrc
+templates           | $DATA/templates/*
+transmission-daemon | $CONFIG/transmission-daemon/settings.json
+transmission-remote | $CONFIG/transmission-remote-gtk/config.json
+transmission-rss    | $CONFIG/transmission-rss/config.yml
+tremc               | $CONFIG/tremc/settings.cfg
+tremc               | $CONFIG/tremc/settings.cfg
+tty-screen          | $CONFIG/issue
+tuir                | $CONFIG/tuir/{tuir.cfg,mailcap}
+update-mirrorlist   | $BIN/update-mirrorlist
+userscripts         | $DATA/qutebrowser/userscripts/
+vifm                | $CONFIG/vifm/vifmrc
+xinitrc             | $CONFIG/X11/xinitrc
+xmodmap             | $CONFIG/X11/Xmodmap*
+xprofile            | $CONFIG/X11/profile
+zathura             | $CONFIG/zathura/zathurarc
+zsh                 | $CONFIG/zsh/{.zshrc,prompt}
+"
