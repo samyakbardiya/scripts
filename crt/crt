@@ -1,18 +1,15 @@
-#!/bin/zsh
+#!/bin/sh
 
 # help menu
 usage="\033[1mUsage\033[0m:
 	$(basename $0) [option] {file}
 \033[1mCompile & Run\033[0m:
 	c = compile ONLY
+	i = create file from your template
 	r = dry run
 	t = run and test
-\033[1mDependency\033[0m:
-	bat, gcc, exa, zsh
 \033[1mLanguage\033[0m:
 	C++"
-
-language="cpp"
 
 #function dependency_check {
 #	declare -a dependency=(bat gcc exa zsh dick)
@@ -25,11 +22,11 @@ language="cpp"
 [[ $# -lt 1 ]] && echo -e "$usage" >&2 && exit 1
 
 # get the file name
-function generate_filename {
+function fn {
 	if [[ -n $2 ]]; then
 		file=$"$2"
 	else
-		file=$(exa --sort=time *.c* | tail -n 1)
+		file=$(ls -t *.c* | head -n 1)
 	fi
 	# seperate filename and extension
 	extension="${file##*.}"
@@ -38,40 +35,37 @@ function generate_filename {
 
 # c -> function to compile and create an executable file
 function gcc_compile {
-	generate_filename
 	g++ -o "$filename" "$file"
 }
 
 # i -> init file
 function init {
-	boiler_plate="$DATA/boiler_plate/c_plus_plus.cc"
+	echo 'fetching template from ~/template/cpp.cpp'
+	boiler_plate="$HOME/template/cpp.cpp"
 	name=$(date +%Y%m%d%H%M%S)
-	cp $boiler_plate "$name.cc"
-	echo -e "$name.cc created :)"
+	cp $boiler_plate "$name.cpp"
+	echo -e "$name.cpp created :)"
 }
 
 # r -> function to dry run
 function dry_run {
-	generate_filename
 	./"$filename"
 }
 
-# t -> function to run the binary against the in*.txt files and time them also
+# t -> function to run the binary against the in*.txt files
 function test_run {
-	generate_filename
 	for f in in*.txt; do
-		echo -e "$f\n========"
-		time ./"$filename" < $f
-		echo
+		echo -e "\n============\n  $f  \n============"
+		./"$filename" < $f
 	done
 }
 
 case $1 in
 	h|-h|--help) echo -e "$usage" && exit ;;
-	c) gcc_compile ;;
+	c) fn; gcc_compile ;;
 	i) init ;;
-	r) dry_run ;;
-	t) test_run ;;
+	r) fn; dry_run ;;
+	t) fn; test_run ;;
 	*) echo -e "$usage" >&2 && exit 2 ;;
 esac
 
