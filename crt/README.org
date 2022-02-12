@@ -3,5 +3,5 @@
 
 A script to easily Compile, Run, or Test your code.
 
-** TODO
+* TODO
 - add option to output DIFF with the output file.
