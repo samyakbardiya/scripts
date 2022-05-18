@@ -24,7 +24,7 @@ usage="\033[1mUsage\033[0m:
 # get the file name
 function fn {
 	if [[ -n $2 ]]; then
-		file=$"$2"
+		file="$2"
 	else
 		file=$(ls -t *.c* | head -n 1)
 	fi
@@ -40,9 +40,13 @@ function gcc_compile {
 
 # i -> init file
 function init {
-	echo 'fetching template from ~/template/cpp.cpp'
-	boiler_plate="$HOME/template/cpp.cpp"
-	name=$(date +%Y%m%d%H%M%S)
+	if [[ -n $2 ]]; then
+		name="$2";
+	else
+        name=$(date +%Y_%m%d_%H%M)
+	fi
+    boiler_plate="$HOME/template/cpp.cpp"
+	echo "fetching template from $boiler_plate"
 	cp $boiler_plate "$name.cpp"
 	echo -e "$name.cpp created :)"
 }
